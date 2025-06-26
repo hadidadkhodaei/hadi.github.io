@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>صفحه اصلی</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script>
+    async function getDeviceCode() {
+      try {
+        const res = await fetch('https://api64.ipify.org?format=json');
+        const data = await res.json();
+        const userAgent = navigator.userAgent;
+        return btoa(data.ip + userAgent).substr(0, 16);
+      } catch {
+        return 'UNKNOWN_DEVICE';
+      }
+    }
+
+    (async () => {
+      const code = await getDeviceCode();
+
+      if (typeof allowedCodes !== 'undefined' && allowedCodes.includes(code)) {
+        // مجوز هست، صفحه نمایش داده می‌شه (همین صفحه)
+        console.log('دسترسی داده شد');
+      } else {
+        // مجوز نیست، برگرد به صفحه ورود
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+</body>
+</html>
